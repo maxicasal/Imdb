@@ -52,16 +52,16 @@
     cell.ratedLabel.adjustsFontSizeToFitWidth = YES;
     cell.timeLabel.adjustsFontSizeToFitWidth = YES;
     cell.releaseDateLabel.adjustsFontSizeToFitWidth = YES;
-//    NSURL*photoUrl = [NSURL URLWithString:movie.imageURL];
-//    NSURLRequest *request = [NSURLRequest requestWithURL:photoUrl];
-//    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * response, NSData * data, NSError * error)
-//     {
-//         if (!error)
-//         {
-//             UIImage* image = [[UIImage alloc] initWithData:data];
-//             cell.imageView.image = image;
-//         }
-//     }];
+    //    NSURL*photoUrl = [NSURL URLWithString:movie.imageURL];
+    //    NSURLRequest *request = [NSURLRequest requestWithURL:photoUrl];
+    //    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * response, NSData * data, NSError * error)
+    //     {
+    //         if (!error)
+    //         {
+    //             UIImage* image = [[UIImage alloc] initWithData:data];
+    //             cell.imageView.image = image;
+    //         }
+    //     }];
     return cell;
 }
 
@@ -106,7 +106,7 @@
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
                                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-
+                               
                                movie.title = [dict objectForKey:@"Title"];
                                movie.rated =[dict objectForKey:@"Rated"];
                                movie.imageURL = [dict objectForKey:@"Poster"];
@@ -118,14 +118,13 @@
                                [self.movies addObject:movie];
                                [self.moviesTableView reloadData];
                            }];
-    
     return movie;
 }
 
 -(void) saveMovie: (Movie *) movie{
-    
     //save in core data the new movie and add it to the tableView array
 }
+
 - (IBAction)onTapGesture:(UITapGestureRecognizer *)sender {
     [self.view endEditing:YES];
 }
