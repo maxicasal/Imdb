@@ -10,7 +10,7 @@
 #import "MovieCell.h"
 #import "Movie.h"
 
-@interface MoviesViewController ()
+@interface MoviesViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property NSMutableArray *movies;
 @property (weak, nonatomic) IBOutlet UITableView *moviesTableView;
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
@@ -22,6 +22,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.movies = [NSMutableArray new];
     [self loadMovies];
 }
 
@@ -36,10 +37,31 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyCell"];
+    MovieCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyCell"];
     
-    //map each movie to the cell
+    Movie *movie = [self.movies objectAtIndex:indexPath.row];
     
+    cell.titleLabel.text = movie.title;
+    cell.genreLabel.text = movie.genre;
+    cell.ratedLabel.text = movie.rated;
+    cell.timeLabel.text = movie.time;
+    cell.releaseDateLabel.text = movie.releaseDate;
+    cell.plotTextView.text = movie.plot;
+    cell.titleLabel.adjustsFontSizeToFitWidth = YES;
+    cell.genreLabel.adjustsFontSizeToFitWidth = YES;
+    cell.ratedLabel.adjustsFontSizeToFitWidth = YES;
+    cell.timeLabel.adjustsFontSizeToFitWidth = YES;
+    cell.releaseDateLabel.adjustsFontSizeToFitWidth = YES;
+//    NSURL*photoUrl = [NSURL URLWithString:movie.imageURL];
+//    NSURLRequest *request = [NSURLRequest requestWithURL:photoUrl];
+//    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * response, NSData * data, NSError * error)
+//     {
+//         if (!error)
+//         {
+//             UIImage* image = [[UIImage alloc] initWithData:data];
+//             cell.imageView.image = image;
+//         }
+//     }];
     return cell;
 }
 
@@ -49,6 +71,7 @@
     if ([self isMovieSaved:title]) {
         //load from core data
     }else{
+        title = [title stringByReplacingOccurrencesOfString:@" " withString:@"+"];
         NSString *plot = @"";
         if (self.plotSegmented.selectedSegmentIndex == 0) {
             plot =@"full";
@@ -75,7 +98,26 @@
 -(Movie *) getMovieFromAPI: (NSString *) movieSearch{
     Movie *movie = [Movie new];
     
-    //map the json to the object
+    NSURL *url = [NSURL URLWithString:movieSearch];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+
+                               movie.title = [dict objectForKey:@"Title"];
+                               movie.rated =[dict objectForKey:@"Rated"];
+                               movie.imageURL = [dict objectForKey:@"Poster"];
+                               movie.plot = [dict objectForKey:@"Plot"];
+                               movie.genre = [dict objectForKey:@"Genre"];
+                               movie.releaseDate = [dict objectForKey:@"Released"];
+                               movie.time = [dict objectForKey:@"Runtime"];
+                               
+                               [self.movies addObject:movie];
+                               [self.moviesTableView reloadData];
+                           }];
     
     return movie;
 }
@@ -83,6 +125,9 @@
 -(void) saveMovie: (Movie *) movie{
     
     //save in core data the new movie and add it to the tableView array
+}
+- (IBAction)onTapGesture:(UITapGestureRecognizer *)sender {
+    [self.view endEditing:YES];
 }
 
 @end
