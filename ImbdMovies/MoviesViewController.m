@@ -66,6 +66,7 @@
 }
 
 - (IBAction)onSearchPressed:(id)sender {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     NSString *title = self.titleTextField.text;
     
     if ([self isMovieSaved:title]) {
@@ -105,8 +106,8 @@
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-                               NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
                                
+                               NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];                    
                                movie.title = [dict objectForKey:@"Title"];
                                movie.rated =[dict objectForKey:@"Rated"];
                                movie.imageURL = [dict objectForKey:@"Poster"];
@@ -117,6 +118,7 @@
                                
                                [self.movies addObject:movie];
                                [self.moviesTableView reloadData];
+                               [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
                            }];
     return movie;
 }
