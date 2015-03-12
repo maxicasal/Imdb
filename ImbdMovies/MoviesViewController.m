@@ -119,9 +119,7 @@
     }
 }
 
-- (IBAction)onComingSoonPressed:(id)sender {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    NSString* stringURL = @"http://www.myapifilms.com/imdb/comingSoon";
+- (void)searchMovies:(NSString *)stringURL {
     NSURL *url = [NSURL URLWithString:stringURL];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     
@@ -144,12 +142,18 @@
                                [self.moviesTableView reloadData];
                                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
                            }];
-    
+}
+
+- (IBAction)onComingSoonPressed:(id)sender {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    NSString* stringURL = @"http://www.myapifilms.com/imdb/comingSoon";
+    [self searchMovies:stringURL];
 }
 
 - (IBAction)onTopPressed:(id)sender {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    
+    NSString* stringURL = @"http://www.myapifilms.com/imdb/inTheaters";
+    [self searchMovies:stringURL];
 }
 
 -(Movie *) getMovieFromAPI: (NSString *) movieSearch{
