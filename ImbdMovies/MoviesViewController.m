@@ -66,6 +66,8 @@
 }
 
 - (IBAction)onSearchPressed:(id)sender {
+    self.titleTextField.text = @"";
+    [self.view endEditing:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     NSString *title = self.titleTextField.text;
     
@@ -96,6 +98,60 @@
     [self saveMovie:movie];
 }
 
+- (void)mapMovie:(NSDictionary *)movieD movie:(Movie *)movie {
+    movie.title = [movieD objectForKey:@"title"];
+    movie.rated =@"No rated";
+    movie.imageURL = [movieD objectForKey:@"urlPoster"];
+    movie.plot = [movieD objectForKey:@"plot"];
+    NSArray *genres =[movieD objectForKey:@"genres"];
+    NSMutableString *genreResult = [NSMutableString new];
+    for (NSString* genre in genres){
+        [genreResult appendString:[NSString stringWithFormat:@"%@, ", genre]];
+    }
+    movie.genre = [NSString stringWithString:genreResult];
+    NSDate *date =[NSDate dateWithTimeIntervalSinceNow:[[movieD objectForKey:@"releaseDate"] doubleValue]];
+    movie.releaseDate = [[date description] stringByReplacingOccurrencesOfString:@" +0000" withString:@""];;
+    NSArray *runTime =[movieD objectForKey:@"runtime"];
+    if (runTime.count > 0) {
+        movie.time = [runTime objectAtIndex:0];
+    }else{
+        movie.time =@"113 min";
+    }
+}
+
+- (IBAction)onComingSoonPressed:(id)sender {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    NSString* stringURL = @"http://www.myapifilms.com/imdb/comingSoon";
+    NSURL *url = [NSURL URLWithString:stringURL];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               
+                               NSArray *results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+                               
+                               for (int index = 0; index < results.count; index++) {
+                                   NSArray*moviesArray = [[results objectAtIndex:index] objectForKey:@"movies"];
+                                   for(int i = 0; i<moviesArray.count; i++){
+                                       NSDictionary *movieD = [moviesArray objectAtIndex:i];
+                                       Movie *movie = [Movie new];
+                                       [self mapMovie:movieD movie:movie];
+                                       [self.movies addObject:movie];
+                                   }
+                               }
+                               
+                               [self.moviesTableView reloadData];
+                               [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                           }];
+    
+}
+
+- (IBAction)onTopPressed:(id)sender {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    
+}
+
 -(Movie *) getMovieFromAPI: (NSString *) movieSearch{
     Movie *movie = [Movie new];
     
@@ -107,7 +163,7 @@
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
                                
-                               NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];                    
+                               NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
                                movie.title = [dict objectForKey:@"Title"];
                                movie.rated =[dict objectForKey:@"Rated"];
                                movie.imageURL = [dict objectForKey:@"Poster"];
