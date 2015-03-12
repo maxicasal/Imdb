@@ -167,15 +167,14 @@
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
                                
-                               NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-                               movie.title = [dict objectForKey:@"Title"];
-                               movie.rated =[dict objectForKey:@"Rated"];
-                               movie.imageURL = [dict objectForKey:@"Poster"];
-                               movie.plot = [dict objectForKey:@"Plot"];
-                               movie.genre = [dict objectForKey:@"Genre"];
-                               movie.releaseDate = [dict objectForKey:@"Released"];
-                               movie.time = [dict objectForKey:@"Runtime"];
-                               
+                               NSDictionary *movieDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+                               movie.title = [movieDictionary objectForKey:@"Title"];
+                               movie.rated =[movieDictionary objectForKey:@"Rated"];
+                               movie.imageURL = [movieDictionary objectForKey:@"Poster"];
+                               movie.plot = [movieDictionary objectForKey:@"Plot"];
+                               movie.genre = [movieDictionary objectForKey:@"Genre"];
+                               movie.releaseDate = [movieDictionary objectForKey:@"Released"];
+                               movie.time = [movieDictionary objectForKey:@"Runtime"];
                                [self.movies addObject:movie];
                                [self.moviesTableView reloadData];
                                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
