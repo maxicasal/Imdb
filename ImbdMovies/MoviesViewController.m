@@ -9,12 +9,16 @@
 #import "MoviesViewController.h"
 #import "MovieCell.h"
 #import "Movie.h"
+#import "OTSPersistance.h"
+
+@import CoreData;
 
 @interface MoviesViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property NSMutableArray *movies;
 @property (weak, nonatomic) IBOutlet UITableView *moviesTableView;
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *plotSegmented;
+@property (strong, nonatomic) OTSPersistance *databaseManager;
 
 @end
 
@@ -23,6 +27,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.movies = [NSMutableArray new];
+    [self setDatabaseManager:[[OTSPersistance alloc] init]];
+    [[self databaseManager] setupCoreDataStackWithCompletionHandler:^(BOOL suceeded, NSError *error) {
+        if (!suceeded) {
+            NSLog(@"Core Data stack setup failed.");
+        }
+    }];
+    
     [self loadMovies];
 }
 
@@ -38,9 +49,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     MovieCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyCell"];
-    
     Movie *movie = [self.movies objectAtIndex:indexPath.row];
-    
     cell.titleLabel.text = movie.title;
     cell.genreLabel.text = movie.genre;
     cell.ratedLabel.text = movie.rated;
@@ -52,16 +61,6 @@
     cell.ratedLabel.adjustsFontSizeToFitWidth = YES;
     cell.timeLabel.adjustsFontSizeToFitWidth = YES;
     cell.releaseDateLabel.adjustsFontSizeToFitWidth = YES;
-    //    NSURL*photoUrl = [NSURL URLWithString:movie.imageURL];
-    //    NSURLRequest *request = [NSURLRequest requestWithURL:photoUrl];
-    //    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * response, NSData * data, NSError * error)
-    //     {
-    //         if (!error)
-    //         {
-    //             UIImage* image = [[UIImage alloc] initWithData:data];
-    //             cell.imageView.image = image;
-    //         }
-    //     }];
     return cell;
 }
 
@@ -70,32 +69,19 @@
     [self.view endEditing:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     NSString *title = self.titleTextField.text;
-    
-    if ([self isMovieSaved:title]) {
-        //load from core data
+    title = [title stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+    NSString *plot = @"";
+    if (self.plotSegmented.selectedSegmentIndex == 0) {
+        plot =@"full";
     }else{
-        title = [title stringByReplacingOccurrencesOfString:@" " withString:@"+"];
-        NSString *plot = @"";
-        if (self.plotSegmented.selectedSegmentIndex == 0) {
-            plot =@"full";
-        }else{
-            plot = @"short";
-        }
-        NSString *url = [NSString stringWithFormat:@"http://www.omdbapi.com/?t=%@&y=&plot=%@t&r=json", title, plot];
-        [self searchMovie:url];
+        plot = @"short";
     }
-}
-
--(BOOL) isMovieSaved: (NSString*) title{
-    //search in database if the movie is saved
-    return NO;
+    NSString *url = [NSString stringWithFormat:@"http://www.omdbapi.com/?t=%@&y=&plot=%@t&r=json", title, plot];
+    [self searchMovie:url];
 }
 
 -(void) searchMovie: (NSString *)movieSearch{
-    
-    Movie *movie = [self getMovieFromAPI:movieSearch];
-    
-    [self saveMovie:movie];
+    [self getMovieFromAPI:movieSearch];
 }
 
 - (void)mapMovie:(NSDictionary *)movieD movie:(Movie *)movie {
@@ -122,12 +108,13 @@
 - (void)searchMovies:(NSString *)stringURL {
     NSURL *url = [NSURL URLWithString:stringURL];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
                                
-                               NSArray *results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+                               NSArray *results = [NSJSONSerialization JSONObjectWithData:data
+                                                                                  options:NSJSONReadingMutableContainers
+                                                                                    error:nil];
                                
                                for (int index = 0; index < results.count; index++) {
                                    NSArray*moviesArray = [[results objectAtIndex:index] objectForKey:@"movies"];
@@ -141,6 +128,7 @@
                                
                                [self.moviesTableView reloadData];
                                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                               [self saveMovies];
                            }];
 }
 
@@ -156,18 +144,18 @@
     [self searchMovies:stringURL];
 }
 
--(Movie *) getMovieFromAPI: (NSString *) movieSearch{
+-(void) getMovieFromAPI: (NSString *) movieSearch{
     Movie *movie = [Movie new];
     
     NSURL *url = [NSURL URLWithString:movieSearch];
-    
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
                                
-                               NSDictionary *movieDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+                               NSDictionary *movieDictionary = [NSJSONSerialization JSONObjectWithData:data
+                                                                                               options:NSJSONReadingMutableContainers
+                                                                                                 error:nil];
                                movie.title = [movieDictionary objectForKey:@"Title"];
                                movie.rated =[movieDictionary objectForKey:@"Rated"];
                                movie.imageURL = [movieDictionary objectForKey:@"Poster"];
@@ -178,12 +166,28 @@
                                [self.movies addObject:movie];
                                [self.moviesTableView reloadData];
                                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                               [self saveMovies];
                            }];
-    return movie;
 }
 
--(void) saveMovie: (Movie *) movie{
-    //save in core data the new movie and add it to the tableView array
+-(void) saveMovies{
+    for (int index = 0; index < self.movies.count; index++) {
+        Movie *movie = [self.movies objectAtIndex:index];
+        NSManagedObject *movieToSave = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:@"Movie"
+                                                                                           inManagedObjectContext:[[self databaseManager] mainThreadManagedObjectContext]] insertIntoManagedObjectContext:[[self databaseManager] mainThreadManagedObjectContext]];
+        [movieToSave setValue:movie.title forKey:@"title"];
+        [movieToSave setValue:movie.genre forKey:@"genre"];
+        [movieToSave setValue:movie.plot forKey:@"plot"];
+        [movieToSave setValue:movie.imageURL forKey:@"poster"];
+        [movieToSave setValue:movie.rated forKey:@"rated"];
+        [movieToSave setValue:movie.releaseDate forKey:@"released"];
+        [movieToSave setValue:movie.time forKey:@"runtime"];
+        [[self databaseManager] saveDataWithCompletionHandler:^(BOOL suceeded, NSError *error) {
+            if (!suceeded) {
+                NSLog(@"Core Data save failed.");
+            }
+        }];
+    }
 }
 
 - (IBAction)onTapGesture:(UITapGestureRecognizer *)sender {

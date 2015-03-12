@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		546CFCBD1AB2076300C0AEA4 /* OTSPersistance.m in Sources */ = {isa = PBXBuildFile; fileRef = 546CFCBC1AB2076300C0AEA4 /* OTSPersistance.m */; };
 		E238FF601AAF27980062124D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E238FF5F1AAF27980062124D /* main.m */; };
 		E238FF631AAF27980062124D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E238FF621AAF27980062124D /* AppDelegate.m */; };
 		E238FF661AAF27980062124D /* ImbdMovies.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E238FF641AAF27980062124D /* ImbdMovies.xcdatamodeld */; };
@@ -32,6 +33,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		546CFCBB1AB2076300C0AEA4 /* OTSPersistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTSPersistance.h; sourceTree = "<group>"; };
+		546CFCBC1AB2076300C0AEA4 /* OTSPersistance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTSPersistance.m; sourceTree = "<group>"; };
 		E238FF5A1AAF27980062124D /* ImbdMovies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImbdMovies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E238FF5E1AAF27980062124D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E238FF5F1AAF27980062124D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -74,6 +77,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		54DAC7E51AB1F86100FE923E /* Persistance */ = {
+			isa = PBXGroup;
+			children = (
+				546CFCBB1AB2076300C0AEA4 /* OTSPersistance.h */,
+				546CFCBC1AB2076300C0AEA4 /* OTSPersistance.m */,
+			);
+			name = Persistance;
+			sourceTree = "<group>";
+		};
 		E238FF511AAF27980062124D = {
 			isa = PBXGroup;
 			children = (
@@ -95,6 +107,7 @@
 		E238FF5C1AAF27980062124D /* ImbdMovies */ = {
 			isa = PBXGroup;
 			children = (
+				54DAC7E51AB1F86100FE923E /* Persistance */,
 				E238FF611AAF27980062124D /* AppDelegate.h */,
 				E238FF621AAF27980062124D /* AppDelegate.m */,
 				E238FF921AAF35F20062124D /* Domain */,
@@ -255,6 +268,7 @@
 				E238FF8E1AAF35E10062124D /* Movie.m in Sources */,
 				E238FF8B1AAF2EC50062124D /* MovieCell.m in Sources */,
 				E238FF881AAF2AE40062124D /* MoviesViewController.m in Sources */,
+				546CFCBD1AB2076300C0AEA4 /* OTSPersistance.m in Sources */,
 				E238FF911AAF35EC0062124D /* MovieUser.m in Sources */,
 				E238FF691AAF27980062124D /* LoginViewController.m in Sources */,
 				E238FF601AAF27980062124D /* main.m in Sources */,
@@ -450,6 +464,7 @@
 				E238FF821AAF27980062124D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E238FF831AAF27980062124D /* Build configuration list for PBXNativeTarget "ImbdMoviesTests" */ = {
 			isa = XCConfigurationList;
@@ -458,6 +473,7 @@
 				E238FF851AAF27980062124D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

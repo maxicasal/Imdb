@@ -254,6 +254,9 @@
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
+                                                    <variation key="widthClass=compact" misplaced="YES">
+                                                        <rect key="frame" x="22" y="13" width="284" height="36"/>
+                                                    </variation>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rated" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ejY-Dw-RbK">
                                                     <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
@@ -720,8 +723,8 @@
                                     <constraint firstAttribute="width" constant="85" id="YXs-CO-cAJ"/>
                                 </constraints>
                                 <segments>
-                                    <segment title="Short"/>
                                     <segment title="Long"/>
+                                    <segment title="Short"/>
                                 </segments>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <variation key="default">
@@ -812,24 +815,24 @@
                                 <exclude reference="3Gb-GY-OZp"/>
                                 <exclude reference="j26-AH-IgI"/>
                                 <exclude reference="vit-EI-taG"/>
-                                <exclude reference="TF6-nx-RM2"/>
-                                <exclude reference="nRW-94-hHK"/>
+                                <exclude reference="Hr7-Qm-6Q8"/>
+                                <exclude reference="I2d-c4-hIe"/>
+                                <exclude reference="Mfu-3F-hzL"/>
+                                <exclude reference="lHV-ay-WBh"/>
+                                <exclude reference="wND-AW-pI3"/>
                                 <exclude reference="0h1-nN-7Jr"/>
                                 <exclude reference="OgS-eu-ALN"/>
                                 <exclude reference="oli-6Y-Cb2"/>
-                                <exclude reference="Hr7-Qm-6Q8"/>
-                                <exclude reference="I2d-c4-hIe"/>
+                                <exclude reference="JQZ-lc-F7v"/>
+                                <exclude reference="iM1-53-DNV"/>
+                                <exclude reference="ta8-wC-kMG"/>
+                                <exclude reference="TF6-nx-RM2"/>
+                                <exclude reference="nRW-94-hHK"/>
                                 <exclude reference="2IR-ee-0Sg"/>
                                 <exclude reference="C6U-NL-egN"/>
                                 <exclude reference="TGZ-Rp-2Qf"/>
                                 <exclude reference="j3m-M4-FRG"/>
                                 <exclude reference="ozi-Eh-6aW"/>
-                                <exclude reference="JQZ-lc-F7v"/>
-                                <exclude reference="iM1-53-DNV"/>
-                                <exclude reference="ta8-wC-kMG"/>
-                                <exclude reference="Mfu-3F-hzL"/>
-                                <exclude reference="lHV-ay-WBh"/>
-                                <exclude reference="wND-AW-pI3"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -847,24 +850,24 @@
                                 <include reference="3Gb-GY-OZp"/>
                                 <include reference="j26-AH-IgI"/>
                                 <include reference="vit-EI-taG"/>
-                                <include reference="TF6-nx-RM2"/>
-                                <include reference="nRW-94-hHK"/>
+                                <include reference="Hr7-Qm-6Q8"/>
+                                <include reference="I2d-c4-hIe"/>
+                                <include reference="Mfu-3F-hzL"/>
+                                <include reference="lHV-ay-WBh"/>
+                                <include reference="wND-AW-pI3"/>
                                 <include reference="0h1-nN-7Jr"/>
                                 <include reference="OgS-eu-ALN"/>
                                 <include reference="oli-6Y-Cb2"/>
-                                <include reference="Hr7-Qm-6Q8"/>
-                                <include reference="I2d-c4-hIe"/>
+                                <include reference="JQZ-lc-F7v"/>
+                                <include reference="iM1-53-DNV"/>
+                                <include reference="ta8-wC-kMG"/>
+                                <include reference="TF6-nx-RM2"/>
+                                <include reference="nRW-94-hHK"/>
                                 <include reference="2IR-ee-0Sg"/>
                                 <include reference="C6U-NL-egN"/>
                                 <include reference="TGZ-Rp-2Qf"/>
                                 <include reference="j3m-M4-FRG"/>
                                 <include reference="ozi-Eh-6aW"/>
-                                <include reference="JQZ-lc-F7v"/>
-                                <include reference="iM1-53-DNV"/>
-                                <include reference="ta8-wC-kMG"/>
-                                <include reference="Mfu-3F-hzL"/>
-                                <include reference="lHV-ay-WBh"/>
-                                <include reference="wND-AW-pI3"/>
                             </mask>
                         </variation>
                         <connections>
